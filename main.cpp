@@ -1,84 +1,147 @@
 #include <iostream>
 #include <cstdint>
+#include <math.h>
 
 using namespace std;
 
-
-// 1. --------------------------------------------------------------------
-class Person {
+// 1.------------------------------------------------
+class Figure{
 protected:
-    string name;
-    int age;
-    string floor;
-    int weight;
+    double S=0;
 public:
-    Person (string n, int a, string f, int w) : name(n), age(a), floor(f), weight(w){}
-    ~Person(){}
-};
-
-
-class Student : public Person
-{
-private:
-    int year;
-    static int count;
-public:
-    Student(string n, int a, string f, int w, int y) : Person (n, a, f, w), year(y) { count++; }
-    ~Student(){}
-
-    void print() const{
-        std::cout << "name-" << name << " age-" << age << " floor-" << floor << " weight-" << weight << " year-" << year << std::endl;
+    Figure (double S) {
+        S = 0;
     }
-
-    static int getCount(){
-        return count;
+    ~Figure(){}
+    virtual void area () = 0;
+    void print (string text) const {
+        cout << text << " area = " << S << endl;
     }
 };
 
-int Student::count = 0;
-
-
-// 2. --------------------------------------------------------------------
-class Fruit
-{
+class Parallelogram : public Figure {
 protected:
-    string name;
-    string color;
+    double a;
+    double b;
+    double angle;
 public:
-    Fruit(string n, string c) : name(n), color(c){}
-    ~Fruit(){}
-
+    Parallelogram () : Figure(0){
+        S = 0;
+        a = 0;
+        b = 0;
+        angle = 0;
+    }
+    ~Parallelogram (){}
+    void area() override{
+        S = a * b * sin(angle * M_PI / 180);
+    }
+    void set_Parallelogram (double a_P, double b_P, double angle_P){
+        a = a_P;
+        b = b_P;
+        angle = angle_P;
+    }
 };
 
-class Banana : public Fruit
-{
+class Circle : public Figure {
 protected:
-    double weight;
+    double radius;
 public:
-    Banana(string n, string c, double w) : Fruit(n, c), weight(w) { }
-    ~Banana() {}
+    Circle () : Figure(0){
+        radius = 0;
+    }
+    ~Circle (){}
+    void area() override{
+        S = M_PI * pow (radius, 2);
+    }
+    void set_Circle (double R){
+        radius = R;
+    }
+};
+
+class Rectangle : public Parallelogram {
+public:
+    Rectangle () {}
+    ~Rectangle () {}
+    void area() override{
+        S = a * b;
+    }
+    void set_Rectangle (double a_P, double b_P){
+        a = a_P;
+        b = b_P;
+    }
+};
+
+class Square : public Parallelogram {       // квадрат
+public:
+    Square () {}
+    ~Square () {}
+    void area() override{
+        S = pow (a, 2);
+    }
+    void set_Square(double a_P){
+        a = a_P;
+    }
+};
+
+class Rhombus : public Parallelogram {
+public:
+    Rhombus () {}
+    ~Rhombus () {}
+    void area() override{
+        S = pow (a, 2) * sin(angle * M_PI / 180);
+    }
+    void set_Rhombus(double a_P, double angle_P){
+        a = a_P;
+        angle = angle_P;
+    }
 };
 
 
-class Apple : public Fruit
+// 2.------------------------------------------------
+class Car
 {
 protected:
-    double weight;
+    string company;
+    string model;
 public:
-    Apple(string n, string c, double w) : Fruit(n, c), weight(w) { }
-    ~Apple() {}
-
+    Car () {
+        cout << "Car" << endl;
+    }
+    ~Car () {
+        cout << "~Car" << endl;
+    }
 };
 
-class GrannySmith : public Apple
+class PassengerCar: virtual public Car
 {
-protected:
-    double size;
 public:
-    GrannySmith(string n, string c, double w, double s) : Apple(n, c, w), size(s){}
-    ~GrannySmith() {}
-    void print() const{
-        std::cout << "name-" << name << " color-" << color << " weight-" << weight << " size-" << size << std::endl;
+    PassengerCar (string company, string model) {
+        cout << "PassengerCar" << endl;
+    }
+    ~PassengerCar () {
+        cout << "~PassengerCar" << endl;
+    }
+};
+
+class Bus: virtual public Car
+{
+public:
+    Bus (string company, string model) {
+        cout << "Bus" << endl;
+    }
+    ~Bus () {
+        cout << "~Bus" << endl;
+    }
+};
+
+class Minivan: public PassengerCar, public Bus
+{
+public:
+    Minivan (string company, string model) :  PassengerCar(company, model), Bus(company, model) {
+        cout << "Minivan" << endl;
+    }
+    ~Minivan () {
+        cout << "~Minivan" << endl;
     }
 };
 
@@ -87,31 +150,55 @@ public:
 
 int main(int argc, char *argv[]){
 
-/*   1. Создать класс Person (человек) с полями: имя, возраст, пол и вес.
-    Определить методы переназначения имени, изменения возраста и веса.
-    Создать производный класс Student (студент), имеющий поле года обучения.
-    Определить методы переназначения и увеличения этого значения.
-    Создать счетчик количества созданных студентов.
-    В функции main() создать несколько студентов. По запросу вывести определенного человека. */
+
+/*  1.Создать абстрактный класс Figure (фигура). Его наследниками являются классы Parallelogram (параллелограмм) и Circle (круг).
+ *  Класс Parallelogram — базовый для классов Rectangle (прямоугольник), Square (квадрат), Rhombus (ромб).
+ *  Для всех классов создать конструкторы. Для класса Figure добавить чисто виртуальную функцию area() (площадь).
+ *  Во всех остальных классах переопределить эту функцию, исходя из геометрических формул нахождения площади.    */
+
+    Parallelogram P_area;
+    P_area.set_Parallelogram (3.45 , 8.9, 45);
+    P_area.area();
+    P_area.print("Parallelogram");
+
+    Circle C_area;
+    C_area.set_Circle (5.25);
+    C_area.area();
+    C_area.print("Circle");
+
+    Rectangle R_area;
+    R_area.set_Rectangle(2.1 , 4.5);
+    R_area.area();
+    R_area.print("Rectangle");
+
+    Square S_area;
+    S_area.set_Square(2.1);
+    S_area.area();
+    S_area.print("Square");
+
+    Rhombus RO_area;
+    RO_area.set_Rhombus(8.4, 90);
+    RO_area.area();
+    RO_area.print("Rhombus");
 
 
-    Student Vasia("Vasia", 18, "m", 61, 2021);
-    Student Petia("Petia", 17, "m", 60, 2020);
-    Student Anna("Anna", 16, "f", 59, 2019);
+/* 2.Создать класс Car (автомобиль) с полями company (компания) и model (модель).
+ * Классы-наследники: PassengerCar (легковой автомобиль) и Bus (автобус).
+ * От этих классов наследует класс Minivan (минивэн).
+ * Создать конструкторы для каждого из классов, чтобы они выводили данные о классах.
+ * Создать объекты для каждого из классов и посмотреть, в какой последовательности выполняются конструкторы.
+ * Обратить внимание на проблему «алмаз смерти». */
 
-    std::cout << "Student - " << Student::getCount() << std::endl;
-
-    Vasia.print();
-    Petia.print();
-    Anna.print();
+    Minivan diamond ("DeLorean", "DMC-12");
 
 
-/*   2.  Создать классы Apple (яблоко) и Banana (банан), которые наследуют класс Fruit (фрукт).
-    У Fruit есть две переменные-члена: name (имя) и color (цвет).
-    Добавить новый класс GrannySmith, который наследует класс Apple. */
 
-    GrannySmith variety("GrannySmith", "Red", 0.558, 1.01);
-    variety.print();
+
+
+
+
+
+
 
 
 
