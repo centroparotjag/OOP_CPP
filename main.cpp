@@ -2,6 +2,9 @@
 #include <cstdint>
 #include <math.h>
 
+#define closed 0
+#define open   1
+
 using namespace std;
 
 // 1.------------------------------------------------
@@ -147,6 +150,31 @@ public:
 
 
 
+// 4.------------------------------------------------
+
+
+
+class Card {
+private:
+    enum card_suit{Hearts, Tiles, Clovers, Pikes} enum_suit;
+    enum card_value{two, three, four, five, six, seven, eight, nine, ten, jack, lady, king, ace} enum_value;
+    bool card_position;
+public:
+ //   Card ( card_suit suit, card_value value, bool position) : enum_suit(suit),  enum_value(value), card_position(position){}
+    Card (){}
+    void Flip(){
+        card_position = !card_position;
+    }
+
+    int GetValue(){
+
+    }
+    void print (){
+        cout << "enum_value -" << enum_value << ", enum_suit - " << enum_suit << ", card_position - " << card_position << endl;
+
+    }
+};
+
 
 int main(int argc, char *argv[]){
 
@@ -190,6 +218,20 @@ int main(int argc, char *argv[]){
  * Обратить внимание на проблему «алмаз смерти». */
 
     Minivan diamond ("DeLorean", "DMC-12");
+
+
+/* 4. Создать класс Card, описывающий карту в игре БлэкДжек. У этого класса должно быть три поля:
+ * масть, значение карты и положение карты (вверх лицом или рубашкой).
+ * Сделать поля масть и значение карты типом перечисления (enum). Положение карты - тип bool.
+ * Также в этом классе должно быть два метода:
+ * - метод Flip(), который переворачивает карту, т.е. если она была рубашкой вверх, то он ее поворачивает лицом вверх, и наоборот.
+ * - метод GetValue(), который возвращает значение карты, пока можно считать, что туз = 1. */
+
+//    Card game;
+//    game.Flip();
+
+//    game.print();
+    // Не доделал.
 
 
 
